@@ -140,6 +140,18 @@ create policy "owner full access" on notes
   using (owner_id = (select auth.uid()))
   with check (owner_id = (select auth.uid()));
 
+-- ---------------------------------------------------------------------------
+-- Grants: this project is created with "Automatically expose new tables" OFF, so each
+-- table needs an explicit grant before the app (logged-in users only) can reach it.
+-- Deliberately NO grants to anon: logged-out visitors get nothing.
+-- RLS policies above still decide which rows each logged-in user may touch.
+-- ---------------------------------------------------------------------------
+grant select, insert, update, delete on public.clients   to authenticated;
+grant select, insert, update, delete on public.cases     to authenticated;
+grant select, insert, update, delete on public.key_dates to authenticated;
+grant select, insert, update, delete on public.documents to authenticated;
+grant select, insert, update, delete on public.notes     to authenticated;
+
 -- TODO (separate step): create a PRIVATE storage bucket for documents and add storage
 --       policies so files are only readable by their owner (via short-lived signed links).
 
