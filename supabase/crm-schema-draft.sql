@@ -166,3 +166,15 @@ grant select, insert, update, delete on public.notes     to authenticated;
 --   and kd.due_date <= current_date + 14
 -- order by kd.due_date;
 -- ---------------------------------------------------------------------------
+
+-- Require MFA (aa12)
+create policy "require mfa" on clients   as restrictive to authenticated
+  using ((select auth.jwt()->>'aal') = 'aal2');
+create policy "require mfa" on cases     as restrictive to authenticated
+  using ((select auth.jwt()->>'aal') = 'aal2');
+create policy "require mfa" on key_dates as restrictive to authenticated
+  using ((select auth.jwt()->>'aal') = 'aal2');
+create policy "require mfa" on documents as restrictive to authenticated
+  using ((select auth.jwt()->>'aal') = 'aal2');
+create policy "require mfa" on notes     as restrictive to authenticated
+  using ((select auth.jwt()->>'aal') = 'aal2');
