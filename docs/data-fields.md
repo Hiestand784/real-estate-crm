@@ -10,7 +10,7 @@
 - Section 6 is a checklist with a status and a file per item, not one column per document.
 - Section 4 and Section 5 are linked to a transaction, and each export file carries the same `transaction_id`.
 
-## 1. Client information (people)
+## 1. Client information
 
 | Field | Tag | Priority |
 |---|---|---|
@@ -23,7 +23,7 @@
 | Client notes | Both | |
 | "Buying anniversary" reminder (calculated from closing date) | Buyer | |
 
-## 2. Other parties (contacts with roles)
+## 2. Other parties
 
 | Field | Tag | Priority |
 |---|---|---|
@@ -50,7 +50,7 @@
 | Lockbox type (Century lock or combination) and 4-digit code | Seller | |
 | HOA yes/no, bylaws on hand yes/no | Seller | |
 
-## 4. Transaction (terms and money)
+## 4. Transaction information
 
 | Field | Tag | Priority |
 |---|---|---|
@@ -70,7 +70,7 @@
 | Survey waived yes/no | Both | |
 | Referral yes/no | Both | |
 
-## 5. Key dates (each becomes a calendar entry)
+## 5. Key dates
 
 | Field | Tag | Priority |
 |---|---|---|
@@ -85,7 +85,7 @@
 | HOA due date | Seller | |
 | Buying anniversary | Buyer | |
 
-## 6. Document tracker (status plus file)
+## 6. Document tracker
 
 | Field | Tag | Priority |
 |---|---|---|
