@@ -13,16 +13,18 @@
 | Buying preferences (bed/bath, size, style, garage, etc.) | Buyer | E |
 | "Buying anniversary" reminder (calculated from closing date) | Buyer | E |
 
-## 2. Other parties
+## 2. Other party information
+
+Shown between Property and Pricing. Stored as columns on the transaction for now (a shared contacts table can come later if retyping the same title companies and lenders gets tedious).
 
 | Field | Tag | Slice |
 |---|---|---|
-| Other agent: name, license #, company, email | Both | C |
-| Other side of the deal (buyer or seller): name, email, phone, address | Both | C |
-| Lender info: name, email, phone | Buyer | C |
-| Title company | Both | C |
-| Title company chooser | Both | C |
-| Earnest money holder | Both | C |
+| Other agent: name, license #, company, email | Both | A2 |
+| Other side of the deal (seller when her client buys, buyer when her client sells): name, phone, email | Both | A2 |
+| Lender info: name, email, phone | Buyer | A2 |
+| Title company (name) | Both | A2 |
+| Title company chosen by: buyer / seller | Both | A2 |
+| Earnest money held by: myself / the other agent / title company | Both | A2 |
 
 ## 3. Property
 
@@ -31,7 +33,6 @@
 | Street address, township, county, zip code | Both | A |
 | Parcel ID | Both | A |
 | Legal description | Both | A |
-| Items included (appliances, etc.) | Both | A |
 | MLS # and BLC # | Both | A |
 | Year built | Seller | A |
 | Total square feet | Seller | A |
@@ -59,6 +60,8 @@
 | Possession: pre / at / post | Both | A |
 | Survey waived yes/no | Both | A |
 | Referral yes/no | Both | A |
+| Items included, as checkboxes (empty unless checked): refrigerator, dishwasher, microwave, oven (gas/electric), water heater (gas/electric), furnace (gas/electric), water softener (owned/rented), plus an "other items" text box | Both | A2 |
+| Items excluded (text box) | Both | A2 |
 
 ## 5. Key dates (each becomes a calendar entry)
 
@@ -98,7 +101,8 @@
 
 - **A:** Sections 3 and 4 (every field is a column on the transaction).
 - **B:** Remaining key dates (config entries plus a date-and-time field for offer expiration).
-- **C:** Other parties (new contacts table with roles).
+- **A2:** Other party information, items included/excluded, status dropped (migration 004).
+- **C:** (Merged into A2. A shared contacts table is optional later.)
 - **D:** Document tracker statuses.
 - **E:** Multiple people per client, buying preferences, anniversary reminder.
 
@@ -106,3 +110,6 @@
 
 - "Party responsible for paying commission" and "who pays warranty" are tagged Both and use the draft options (seller / buyer / split / other). Revisit if she doesn't need them.
 - The zip code is enough to identify the address, so there is no separate city or state field.
+- No transaction status field. She doesn't need one for now.
+- Notes is a plain text box with no label or hint text.
+- The client's name field is just "Name" (not "full legal name").

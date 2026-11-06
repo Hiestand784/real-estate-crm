@@ -13,12 +13,8 @@ export interface Client {
 
 export type Side = 'buyer' | 'seller'
 
-export type TransactionStatus =
-  | 'prospect'
-  | 'listed'
-  | 'under_contract'
-  | 'closed'
-  | 'fell_through'
+export type Fuel = 'included' | 'gas' | 'electric' // 'included' = type not picked
+export type Ownership = 'included' | 'owned' | 'rented'
 
 export type PaymentMethod =
   | 'cash'
@@ -34,7 +30,6 @@ export interface Transaction {
   owner_id: string
   client_id: string
   side: Side
-  status: TransactionStatus
   acceptance_date: string | null
   created_at: string
 
@@ -45,7 +40,6 @@ export interface Transaction {
   zip_code: string | null
   parcel_id: string | null
   legal_description: string | null
-  items_included: string | null
   mls_number: string | null
   blc_number: string | null
   year_built: number | null
@@ -54,6 +48,21 @@ export interface Transaction {
   lockbox_type: 'century_lock' | 'combination_lock' | null
   has_hoa: boolean | null // null = not answered yet
   hoa_bylaws_on_hand: boolean | null
+
+  // Other party information
+  other_agent_name: string | null
+  other_agent_license: string | null
+  other_agent_company: string | null
+  other_agent_email: string | null
+  other_party_name: string | null // seller if her client buys, buyer if her client sells
+  other_party_phone: string | null
+  other_party_email: string | null
+  lender_name: string | null // buyer side only
+  lender_email: string | null
+  lender_phone: string | null
+  title_company: string | null
+  title_company_chosen_by: Side | null
+  earnest_money_holder: 'self' | 'other_agent' | 'title_company' | null
 
   // Pricing and commission
   list_price: number | null
@@ -75,6 +84,16 @@ export interface Transaction {
   possession: 'pre' | 'at' | 'post' | null
   survey_waived: boolean | null
   referral: boolean | null
+  // Items included: null = box not checked
+  incl_refrigerator: true | null
+  incl_dishwasher: true | null
+  incl_microwave: true | null
+  incl_oven: Fuel | null
+  incl_water_heater: Fuel | null
+  incl_furnace: Fuel | null
+  incl_water_softener: Ownership | null
+  items_included_other: string | null
+  items_excluded: string | null
 
   general_notes: string | null
 }

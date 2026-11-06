@@ -5,6 +5,8 @@ import type { KeyDateKind, Side } from '../types/db'
 
 export type FieldType =
   | 'text'
+  | 'email'
+  | 'tel'
   | 'textarea'
   | 'integer'
   | 'money'
@@ -12,7 +14,9 @@ export type FieldType =
   | 'date'
   | 'select'
   | 'yesno'
+  | 'checkbox' // unchecked = null; with options, checking it reveals a choice (e.g. gas/electric)
   | 'computed'
+  | 'heading' // a sub-heading inside a section; never saved
 
 export interface Option {
   value: string
@@ -38,6 +42,7 @@ export interface FieldDef {
   store: 'column' | 'key_date' | 'none'
   kind?: KeyDateKind // required when store is 'key_date'
   required?: boolean
+  hideLabel?: boolean // label is still read by screen readers, just not shown
   help?: string
   options?: Option[]
   showIf?: ShowIf
@@ -50,12 +55,27 @@ const SELLER: Side[] = ['seller']
 
 const BLANK: Option = { value: '', label: '—' }
 
-const STATUS_OPTIONS: Option[] = [
-  { value: 'prospect', label: 'Prospect' },
-  { value: 'listed', label: 'Listed' },
-  { value: 'under_contract', label: 'Under contract' },
-  { value: 'closed', label: 'Closed' },
-  { value: 'fell_through', label: 'Fell through' },
+const FUEL_OPTIONS: Option[] = [
+  { value: 'gas', label: 'Gas' },
+  { value: 'electric', label: 'Electric' },
+]
+
+const OWNERSHIP_OPTIONS: Option[] = [
+  { value: 'owned', label: 'Owned' },
+  { value: 'rented', label: 'Rented' },
+]
+
+const CHOSEN_BY_OPTIONS: Option[] = [
+  BLANK,
+  { value: 'buyer', label: 'Buyer' },
+  { value: 'seller', label: 'Seller' },
+]
+
+const EM_HOLDER_OPTIONS: Option[] = [
+  BLANK,
+  { value: 'self', label: 'Myself' },
+  { value: 'other_agent', label: 'The other agent' },
+  { value: 'title_company', label: 'Title company' },
 ]
 
 // Draft option list: confirm with her before relying on it.
@@ -145,21 +165,24 @@ function keyDate(
   }
 }
 
+function heading(key: string, label: string, section: string, sides: Side[]): FieldDef {
+  return { key, label, type: 'heading', section, sides, store: 'none' }
+}
+
 const PROPERTY = 'Property'
+const OTHER = 'Other party information'
 const PRICING = 'Pricing and commission'
 const TERMS = 'Contract terms'
 const NOTES = 'Notes'
 
 export const FIELDS: FieldDef[] = [
   // ---- Property -------------------------------------------------------------
-  col('status', 'Status', 'select', PROPERTY, BOTH, { options: STATUS_OPTIONS }),
   col('property_address', 'Street address', 'text', PROPERTY, BOTH, { required: true }),
   col('township', 'Township', 'text', PROPERTY, BOTH),
   col('county', 'County', 'text', PROPERTY, BOTH),
   col('zip_code', 'Zip code', 'text', PROPERTY, BOTH),
   col('parcel_id', 'Parcel ID', 'text', PROPERTY, BOTH),
   col('legal_description', 'Legal description', 'textarea', PROPERTY, BOTH),
-  col('items_included', 'Items included (appliances, etc.)', 'textarea', PROPERTY, BOTH),
   col('mls_number', 'MLS #', 'text', PROPERTY, BOTH),
   col('blc_number', 'BLC #', 'text', PROPERTY, BOTH),
   col('year_built', 'Year built', 'integer', PROPERTY, SELLER),
@@ -169,6 +192,31 @@ export const FIELDS: FieldDef[] = [
   col('has_hoa', 'HOA', 'yesno', PROPERTY, SELLER),
   col('hoa_bylaws_on_hand', 'HOA bylaws on hand', 'yesno', PROPERTY, SELLER, {
     showIf: { key: 'has_hoa', equals: 'true' },
+  }),
+
+  // ---- Other party information ----------------------------------------------------
+  heading('other_agent_heading', 'Other agent', OTHER, BOTH),
+  col('other_agent_name', 'Name', 'text', OTHER, BOTH),
+  col('other_agent_license', 'License #', 'text', OTHER, BOTH),
+  col('other_agent_company', 'Company', 'text', OTHER, BOTH),
+  col('other_agent_email', 'Email', 'email', OTHER, BOTH),
+  // The other side of the deal: the seller when her client buys, and the reverse
+  heading('other_party_heading_seller', 'Seller', OTHER, BUYER),
+  heading('other_party_heading_buyer', 'Buyer', OTHER, SELLER),
+  col('other_party_name', 'Name', 'text', OTHER, BOTH),
+  col('other_party_phone', 'Phone', 'tel', OTHER, BOTH),
+  col('other_party_email', 'Email', 'email', OTHER, BOTH),
+  heading('lender_heading', 'Lender', OTHER, BUYER),
+  col('lender_name', 'Name', 'text', OTHER, BUYER),
+  col('lender_email', 'Email', 'email', OTHER, BUYER),
+  col('lender_phone', 'Phone', 'tel', OTHER, BUYER),
+  heading('title_heading', 'Title and earnest money', OTHER, BOTH),
+  col('title_company', 'Title company', 'text', OTHER, BOTH),
+  col('title_company_chosen_by', 'Title company chosen by', 'select', OTHER, BOTH, {
+    options: CHOSEN_BY_OPTIONS,
+  }),
+  col('earnest_money_holder', 'Earnest money held by', 'select', OTHER, BOTH, {
+    options: EM_HOLDER_OPTIONS,
   }),
 
   // ---- Pricing and commission --------------------------------------------------
@@ -223,6 +271,18 @@ export const FIELDS: FieldDef[] = [
   col('possession', 'Possession', 'select', TERMS, BOTH, { options: POSSESSION_OPTIONS }),
   col('survey_waived', 'Survey waived', 'yesno', TERMS, BOTH),
   col('referral', 'Referral', 'yesno', TERMS, BOTH),
+  heading('items_included_heading', 'Items included', TERMS, BOTH),
+  col('incl_refrigerator', 'Refrigerator', 'checkbox', TERMS, BOTH),
+  col('incl_dishwasher', 'Dishwasher', 'checkbox', TERMS, BOTH),
+  col('incl_microwave', 'Microwave', 'checkbox', TERMS, BOTH),
+  col('incl_oven', 'Oven', 'checkbox', TERMS, BOTH, { options: FUEL_OPTIONS }),
+  col('incl_water_heater', 'Water heater', 'checkbox', TERMS, BOTH, { options: FUEL_OPTIONS }),
+  col('incl_furnace', 'Furnace', 'checkbox', TERMS, BOTH, { options: FUEL_OPTIONS }),
+  col('incl_water_softener', 'Water softener', 'checkbox', TERMS, BOTH, {
+    options: OWNERSHIP_OPTIONS,
+  }),
+  col('items_included_other', 'Other items included', 'textarea', TERMS, BOTH),
+  col('items_excluded', 'Items excluded', 'textarea', TERMS, BOTH),
 
   // ---- Key dates (the rest of this section comes in the next slice) -----------------
   keyDate('emd_deadline', 'Earnest money due', BOTH),
@@ -234,7 +294,5 @@ export const FIELDS: FieldDef[] = [
   }),
 
   // ---- Notes -----------------------------------------------------------------------
-  col('general_notes', 'Notes', 'textarea', NOTES, BOTH, {
-    help: 'Anything unusual about this transaction.',
-  }),
+  col('general_notes', 'Notes', 'textarea', NOTES, BOTH, { hideLabel: true }),
 ]

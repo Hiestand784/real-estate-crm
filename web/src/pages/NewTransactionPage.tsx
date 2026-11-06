@@ -9,7 +9,7 @@ import type { Client, Side } from '../types/db'
 type ClientMode = 'existing' | 'new'
 type ColumnValue = string | number | boolean | null
 
-const EMPTY_VALUES: FormValues = { status: 'prospect' }
+const EMPTY_VALUES: FormValues = {}
 const EMPTY_CLIENT = { full_name: '', email: '', phone: '' }
 
 // Turn what was typed into the right JSON type. Blank means "not answered": null.
@@ -23,6 +23,9 @@ function columnValue(field: FieldDef, raw: string): ColumnValue {
       return Number(v)
     case 'yesno':
       return v === 'true'
+    case 'checkbox':
+      // Simple items save true; items with a type save 'included' or the type
+      return field.options?.length ? v : true
     default:
       return v
   }
@@ -114,7 +117,6 @@ export function NewTransactionPage() {
       .forEach((f) => {
         transaction[f.key] = columnValue(f, values[f.key] ?? '')
       })
-    transaction.status = transaction.status ?? 'prospect'
 
     // Concession type and value go together (the database requires it too)
     const hasType = transaction.seller_concessions_type != null
@@ -230,7 +232,7 @@ export function NewTransactionPage() {
           ) : (
             <>
               <div>
-                <label htmlFor="new-name">Full legal name *</label>
+                <label htmlFor="new-name">Name *</label>
                 <input
                   id="new-name"
                   value={newClient.full_name}

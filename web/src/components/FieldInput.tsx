@@ -19,6 +19,51 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
   const value = values[field.key] ?? ''
   const set = (v: string) => onChange(field.key, v)
 
+  // Sub-heading inside a section, e.g. "Lender" or "Items included"
+  if (field.type === 'heading') {
+    return <h3>{field.label}</h3>
+  }
+
+  // Checkbox: '' = unchecked (saved as null). Simple items store 'true'.
+  // Items with options store 'included' until a type is picked, then the type.
+  if (field.type === 'checkbox') {
+    const checked = value !== ''
+    const options = field.options ?? []
+    return (
+      <div>
+        <label>
+          <input
+            id={id}
+            name={field.key}
+            type="checkbox"
+            checked={checked}
+            onChange={(e) => set(e.target.checked ? (options.length ? 'included' : 'true') : '')}
+          />
+          {field.label}
+        </label>
+        {checked && options.length > 0 && (
+          <span>
+            {options.map((o) => (
+              <label key={o.value}>
+                {' '}
+                <input
+                  type="radio"
+                  name={`${field.key}-type`}
+                  checked={value === o.value}
+                  onChange={() => set(o.value)}
+                />
+                {o.label}
+              </label>
+            ))}
+          </span>
+        )}
+      </div>
+    )
+  }
+
+  // When the label is hidden, screen readers still get it through aria-label
+  const ariaLabel = field.hideLabel ? field.label : undefined
+
   let control
   switch (field.type) {
     case 'computed':
@@ -27,7 +72,27 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
 
     case 'textarea':
       control = (
-        <textarea id={id} name={field.key} rows={4} value={value} onChange={(e) => set(e.target.value)} />
+        <textarea
+          id={id}
+          name={field.key}
+          rows={4}
+          aria-label={ariaLabel}
+          value={value}
+          onChange={(e) => set(e.target.value)}
+        />
+      )
+      break
+
+    case 'email':
+    case 'tel':
+      control = (
+        <input
+          id={id}
+          name={field.key}
+          type={field.type}
+          value={value}
+          onChange={(e) => set(e.target.value)}
+        />
       )
       break
 
@@ -113,10 +178,12 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
 
   return (
     <div>
-      <label htmlFor={id}>
-        {field.label}
-        {field.required ? ' *' : ''}
-      </label>
+      {!field.hideLabel && (
+        <label htmlFor={id}>
+          {field.label}
+          {field.required ? ' *' : ''}
+        </label>
+      )}
       {control}
       {field.help && <small>{field.help}</small>}
     </div>
