@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { supabase } from '../lib/supabase'
-import { EnrollMfa } from './EntollMfa'
+import { EnrollMfa } from './EnrollMfa'
 import { VerifyMfa } from './VerifyMfa'
 
 type Step = 'checking' | 'enroll' | 'verify' | 'ok' | 'error'
