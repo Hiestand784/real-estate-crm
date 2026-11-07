@@ -99,8 +99,8 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 
 ## Build slices
 
-- **A:** Sections 3 and 4 (every field is a column on the transaction).
-- **B:** Remaining key dates (config entries plus a date-and-time field for offer expiration).
+- **A:** Sections 3 and 4 (every field is a column on the transaction). (Done)
+- **B:** Remaining key dates (config entries plus a date-and-time field for offer expiration). (Done)
 - **A2:** Other party information, items included/excluded, status dropped (migration 004).
 - **C:** (Merged into A2. A shared contacts table is optional later.)
 - **D:** Document tracker statuses.
@@ -110,6 +110,3 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 
 - "Party responsible for paying commission" and "who pays warranty" are tagged Both and use the draft options (seller / buyer / split / other). Revisit if she doesn't need them.
 - The zip code is enough to identify the address, so there is no separate city or state field.
-- No transaction status field. She doesn't need one for now.
-- Notes is a plain text box with no label or hint text.
-- The client's name field is just "Name" (not "full legal name").

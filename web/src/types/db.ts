@@ -104,6 +104,7 @@ export type KeyDateKind =
   | 'listing_contract_start'
   | 'listing_contract_expires'
   | 'list_date'
+  | 'purchase_agreement_created'
   | 'pending_date'
   | 'emd_deadline'
   | 'inspection_deadline'

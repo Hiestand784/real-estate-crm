@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { supabase } from '../lib/supabase'
-import { FIELDS } from '../lib/fields'
+import { FIELDS, timeKey } from '../lib/fields'
 import type { FieldDef, FormValues } from '../lib/fields'
 import { FieldInput } from '../components/FieldInput'
 import type { Client, Side } from '../types/db'
@@ -79,14 +79,14 @@ export function NewTransactionPage() {
   // Fields that apply to this side AND whose "show if" condition is met
   const visibleFields: FieldDef[] = side
     ? FIELDS.filter(
-        (f) =>
-          f.sides.includes(side) && (!f.showIf || values[f.showIf.key] === f.showIf.equals),
-      )
+      (f) =>
+        f.sides.includes(side) && (!f.showIf || values[f.showIf.key] === f.showIf.equals),
+    )
     : []
 
   // Group by section, keeping the order they appear in the list
   const sections = visibleFields.reduce<Record<string, FieldDef[]>>((acc, f) => {
-    ;(acc[f.section] ??= []).push(f)
+    ; (acc[f.section] ??= []).push(f)
     return acc
   }, {})
 
@@ -126,19 +126,35 @@ export function NewTransactionPage() {
       return
     }
 
-    const keyDates = visibleFields
-      .filter((f) => f.store === 'key_date' && text(f.key) !== '')
-      .map((f) => ({ kind: f.kind, due_date: text(f.key) }))
+    const dateFields = visibleFields.filter((f) => f.store === 'key_date')
+
+    // A time with no date would be silently dropped, so stop and say so
+    const timeOnly = dateFields.find(
+      (f) => f.type === 'datetime' && text(timeKey(f.key)) !== '' && text(f.key) === '',
+    )
+    if (timeOnly) {
+      setError(`${timeOnly.label}: enter a date to go with the time.`)
+      return
+    }
+
+    const keyDates = dateFields
+      .filter((f) => text(f.key) !== '')
+      .map((f) => ({
+        kind: f.kind,
+        due_date: text(f.key),
+        // Only datetime fields have a time; blank time is saved as null
+        due_time: f.type === 'datetime' ? text(timeKey(f.key)) || null : null,
+      }))
 
     const payload = {
       client_id: clientMode === 'existing' ? clientId : null,
       new_client:
         clientMode === 'new'
           ? {
-              full_name: newClient.full_name.trim(),
-              email: newClient.email.trim(),
-              phone: newClient.phone.trim(),
-            }
+            full_name: newClient.full_name.trim(),
+            email: newClient.email.trim(),
+            phone: newClient.phone.trim(),
+          }
           : null,
       transaction,
       key_dates: keyDates,

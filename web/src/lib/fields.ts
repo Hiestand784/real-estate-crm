@@ -12,6 +12,7 @@ export type FieldType =
   | 'money'
   | 'percent'
   | 'date'
+  | 'datetime'
   | 'select'
   | 'yesno'
   | 'checkbox' // unchecked = null; with options, checking it reveals a choice (e.g. gas/electric)
@@ -30,6 +31,10 @@ export interface ShowIf {
 }
 
 export type FormValues = Record<string, string>
+
+export function timeKey(key: string): string {
+  return `${key}_time`
+}
 
 export interface FieldDef {
   key: string
@@ -284,14 +289,24 @@ export const FIELDS: FieldDef[] = [
   col('items_included_other', 'Other items included', 'textarea', TERMS, BOTH),
   col('items_excluded', 'Items excluded', 'textarea', TERMS, BOTH),
 
-  // ---- Key dates (the rest of this section comes in the next slice) -----------------
-  keyDate('emd_deadline', 'Earnest money due', BOTH),
-  keyDate('inspection_deadline', 'Initial inspection due', BOTH),
-  keyDate('closing', 'Closing date', BOTH),
+  // ---- Key dates (roughly in the order they happen in a deal) ----------------------
+  keyDate('buyer_agency_start', 'Buyer agency agreement starts', BUYER),
   keyDate('buyer_agency_end', 'Buyer agency agreement ends', BUYER),
+  keyDate('listing_contract_start', 'Listing contract created', SELLER),
+  keyDate('list_date', 'Listing date', SELLER),
   keyDate('listing_contract_expires', 'Listing contract expires', SELLER, {
     help: 'Very important: if this date passes, the listing has to be redone.',
   }),
+  keyDate('offer_expiration', 'Offer expires', BOTH, {
+    type: 'datetime',
+    help: 'Time is optional. Leave it blank if the offer runs to the end of the day.',
+  }),
+  keyDate('purchase_agreement_created', 'Purchase agreement created', BOTH),
+  keyDate('pending_date', 'Pending date', BOTH),
+  keyDate('emd_deadline', 'Earnest money due', BOTH),
+  keyDate('inspection_deadline', 'Initial inspection due', BOTH),
+  keyDate('hoa_due', 'HOA due date', SELLER, { showIf: { key: 'has_hoa', equals: 'true' } }),
+  keyDate('closing', 'Closing date', BOTH),
 
   // ---- Notes -----------------------------------------------------------------------
   col('general_notes', 'Notes', 'textarea', NOTES, BOTH, { hideLabel: true }),

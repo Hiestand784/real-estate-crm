@@ -1,4 +1,5 @@
 import type { FieldDef, FormValues, Option } from '../lib/fields'
+import { timeKey } from '../lib/fields'
 
 interface FieldInputProps {
   field: FieldDef
@@ -162,6 +163,24 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
         <input id={id} name={field.key} type="date" value={value} onChange={(e) => set(e.target.value)} />
       )
       break
+
+    // Two inputs so the time can stay blank. The time lives under its own key.
+    case 'datetime': {
+      const tKey = timeKey(field.key)
+      control = (
+        <>
+          <input id={id} name={field.key} type="date" value={value} onChange={(e) => set(e.target.value)} />{' '}
+          <input
+            name={tKey}
+            type="time"
+            aria-label={`${field.label} (time)`}
+            value={values[tKey] ?? ''}
+            onChange={(e) => onChange(tKey, e.target.value)}
+          />
+        </>
+      )
+      break
+    }
 
     default:
       control = (
