@@ -78,17 +78,19 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 | HOA due date | Seller | B |
 | Buying anniversary (calculated from closing date) | Buyer | E |
 
-  Each item is a checkbox: checked = true, unchecked = empty (null).
+## 6. Document tracker (status for now, file storage comes later)
 
-  | Field | Tag | Slice |
-  |---|---|---|
-  | Buyer's exclusive agency agreement on file | Buyer | D |
-  | Listing contract on file | Seller | D |
-  | Seller's disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
-  | Lead-based paint disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
-  | Disclosure of interests on file | Seller | D |
-  | HOA bylaws on hand (moved here from Property; shown only if HOA is yes) | Seller | D |
-  | Purchase agreement on file | Both | D |
+Each item is a checkbox: checked = true, unchecked = empty (null).
+
+| Field | Tag | Slice |
+|---|---|---|
+| Buyer's exclusive agency agreement on file | Buyer | D |
+| Listing contract on file | Seller | D |
+| Seller's disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
+| Lead-based paint disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
+| Disclosure of interests on file | Seller | D |
+| HOA bylaws on hand (moved here from Property; shown only if HOA is yes) | Seller | D |
+| Purchase agreement on file | Both | D |
 
 ## 7. Notes
 
