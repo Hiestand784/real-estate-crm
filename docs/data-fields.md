@@ -39,7 +39,6 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 | Annual tax | Seller | A |
 | Lockbox type (Century lock or combination) | Seller | A |
 | HOA yes/no | Seller | A |
-| Bylaws on hand yes/no (shown only if HOA is yes) | Seller | A |
 
 ## 4. Transaction information
 
@@ -79,17 +78,17 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 | HOA due date | Seller | B |
 | Buying anniversary (calculated from closing date) | Buyer | E |
 
-## 6. Document tracker (status for now, file storage comes later)
+  Each item is a checkbox: checked = true, unchecked = empty (null).
 
-| Field | Tag | Slice |
-|---|---|---|
-| Buyer's exclusive agency agreement stored | Buyer | D |
-| Listing contract | Seller | D |
-| Seller's disclosure: signed, signed copy on file | Seller | D |
-| Lead-based paint disclosure: signed, signed copy on file | Seller | D |
-| Disclosure of interests | Seller | D |
-| HOA bylaws on hand | Seller | D |
-| Purchase agreement | Both | D |
+  | Field | Tag | Slice |
+  |---|---|---|
+  | Buyer's exclusive agency agreement on file | Buyer | D |
+  | Listing contract on file | Seller | D |
+  | Seller's disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
+  | Lead-based paint disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
+  | Disclosure of interests on file | Seller | D |
+  | HOA bylaws on hand (moved here from Property; shown only if HOA is yes) | Seller | D |
+  | Purchase agreement on file | Both | D |
 
 ## 7. Notes
 
@@ -101,9 +100,9 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 
 - **A:** Sections 3 and 4 (every field is a column on the transaction). (Done)
 - **B:** Remaining key dates (done; migration 005, `datetime` field type for offer expiration).
-- **A2:** Other party information, items included/excluded, status dropped (migration 004).
+- **A2:** Other party information, items included/excluded, status dropped (migration 004). (Done)
 - **C:** (Merged into A2. A shared contacts table is optional later.)
-- **D:** Document tracker statuses.
+- **D:** Document tracker statuses (migration 006).
 - **E:** Multiple people per client, buying preferences, anniversary reminder.
 
 ## Decisions
@@ -116,3 +115,6 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 - "Date of contract creation" means the purchase agreement's creation date.
 - HOA due date only shows when HOA is yes.
 - Offer expiration time is optional and stored as local (Indiana) clock time with no time zone.
+  - Document tracker items are "on file" checkboxes only. Add a "signed" box to the purchase agreement later if she wants one.
+  - HOA bylaws on hand lives in the Document tracker (not Property) and is a checkbox there.
+  - Lead-based paint disclosure shows on every seller deal, labeled "homes built before 1978". She leaves it blank when it doesn't apply.

@@ -95,6 +95,16 @@ export interface Transaction {
   items_included_other: string | null
   items_excluded: string | null
 
+  // Document tracker: null = box not checked
+  doc_buyer_agency_on_file: true | null // buyer side only
+  doc_listing_contract_on_file: true | null // seller side only, like the rest below
+  doc_sellers_disclosure_signed: true | null
+  doc_sellers_disclosure_on_file: true | null
+  doc_lead_paint_signed: true | null
+  doc_lead_paint_on_file: true | null
+  doc_disclosure_of_interests_on_file: true | null
+  doc_purchase_agreement_on_file: true | null // both sides
+
   general_notes: string | null
 }
 

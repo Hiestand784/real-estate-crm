@@ -178,6 +178,7 @@ const PROPERTY = 'Property'
 const OTHER = 'Other party information'
 const PRICING = 'Pricing and commission'
 const TERMS = 'Contract terms'
+const DOCS = 'Document tracker'
 const NOTES = 'Notes'
 
 export const FIELDS: FieldDef[] = [
@@ -195,9 +196,6 @@ export const FIELDS: FieldDef[] = [
   col('annual_tax', 'Annual tax', 'money', PROPERTY, SELLER),
   col('lockbox_type', 'Lockbox type', 'select', PROPERTY, SELLER, { options: LOCKBOX_OPTIONS }),
   col('has_hoa', 'HOA', 'yesno', PROPERTY, SELLER),
-  col('hoa_bylaws_on_hand', 'HOA bylaws on hand', 'yesno', PROPERTY, SELLER, {
-    showIf: { key: 'has_hoa', equals: 'true' },
-  }),
 
   // ---- Other party information ----------------------------------------------------
   heading('other_agent_heading', 'Other agent', OTHER, BOTH),
@@ -307,6 +305,23 @@ export const FIELDS: FieldDef[] = [
   keyDate('inspection_deadline', 'Initial inspection due', BOTH),
   keyDate('hoa_due', 'HOA due date', SELLER, { showIf: { key: 'has_hoa', equals: 'true' } }),
   keyDate('closing', 'Closing date', BOTH),
+  // ---- Document tracker (status only; file storage comes later) --------------------
+  col('doc_buyer_agency_on_file', "Buyer's exclusive agency agreement on file", 'checkbox', DOCS, BUYER),
+  col('doc_listing_contract_on_file', 'Listing contract on file', 'checkbox', DOCS, SELLER),
+  heading('sellers_disclosure_heading', "Seller's disclosure", DOCS, SELLER),
+  col('doc_sellers_disclosure_signed', 'Signed', 'checkbox', DOCS, SELLER),
+  col('doc_sellers_disclosure_on_file', 'Signed copy on file', 'checkbox', DOCS, SELLER),
+  // Only required for homes built before 1978. She can skip it otherwise.
+  heading('lead_paint_heading', 'Lead-based paint disclosure (homes built before 1978)', DOCS, SELLER),
+  col('doc_lead_paint_signed', 'Signed', 'checkbox', DOCS, SELLER),
+  col('doc_lead_paint_on_file', 'Signed copy on file', 'checkbox', DOCS, SELLER),
+  heading('other_docs_heading', 'Other documents', DOCS, SELLER),
+  col('doc_disclosure_of_interests_on_file', 'Disclosure of interests on file', 'checkbox', DOCS, SELLER),
+  // Moved here from Property. Same column, so no database change.
+  col('hoa_bylaws_on_hand', 'HOA bylaws on hand', 'checkbox', DOCS, SELLER, {
+    showIf: { key: 'has_hoa', equals: 'true' },
+  }),
+  col('doc_purchase_agreement_on_file', 'Purchase agreement on file', 'checkbox', DOCS, BOTH),
 
   // ---- Notes -----------------------------------------------------------------------
   col('general_notes', 'Notes', 'textarea', NOTES, BOTH, { hideLabel: true }),
