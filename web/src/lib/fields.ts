@@ -303,7 +303,7 @@ export const FIELDS: FieldDef[] = [
   keyDate('pending_date', 'Pending date', BOTH),
   keyDate('emd_deadline', 'Earnest money due', BOTH),
   keyDate('inspection_deadline', 'Initial inspection due', BOTH),
-  keyDate('hoa_due', 'HOA due date', SELLER, { showIf: { key: 'has_hoa', equals: 'true' } }),
+  keyDate('hoa_due', 'HOA bylaws due', SELLER, { showIf: { key: 'has_hoa', equals: 'true' } }),
   keyDate('closing', 'Closing date', BOTH),
   // ---- Document tracker (status only; file storage comes later) --------------------
   col('doc_buyer_agency_on_file', "Buyer's exclusive agency agreement on file", 'checkbox', DOCS, BUYER),
