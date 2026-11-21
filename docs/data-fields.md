@@ -75,7 +75,7 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 | Listing date | Seller | B |
 | Pending date | Both | B |
 | Offer expiration (date and time, not necessarily midnight) | Both | B |
-| HOA due date | Seller | B |
+| HOA bylaws due | Seller | B |
 | Buying anniversary (calculated from closing date) | Buyer | E |
 
 ## 6. Document tracker (status for now, file storage comes later)

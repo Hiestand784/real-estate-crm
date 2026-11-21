@@ -1,3 +1,4 @@
+import { CALENDAR_COLORS } from '../types/db'
 import type { KeyDateKind, Side } from '../types/db'
 
 // The form is built from this list. To add a field, add one entry here
@@ -59,6 +60,11 @@ const BUYER: Side[] = ['buyer']
 const SELLER: Side[] = ['seller']
 
 const BLANK: Option = { value: '', label: '—' }
+
+const COLOR_OPTIONS: Option[] = [
+  BLANK,
+  ...CALENDAR_COLORS.map((c) => ({ value: c, label: c[0].toUpperCase() + c.slice(1) })),
+]
 
 const FUEL_OPTIONS: Option[] = [
   { value: 'gas', label: 'Gas' },
@@ -288,6 +294,10 @@ export const FIELDS: FieldDef[] = [
   col('items_excluded', 'Items excluded', 'textarea', TERMS, BOTH),
 
   // ---- Key dates (roughly in the order they happen in a deal) ----------------------
+  col('color', 'Calendar color', 'select', 'Key dates', BOTH, {
+    options: COLOR_OPTIONS,
+    help: 'Shown as a dot next to this deal’s dates so you can tell deals apart.',
+  }),
   keyDate('buyer_agency_start', 'Buyer agency agreement starts', BUYER),
   keyDate('buyer_agency_end', 'Buyer agency agreement ends', BUYER),
   keyDate('listing_contract_start', 'Listing contract created', SELLER),

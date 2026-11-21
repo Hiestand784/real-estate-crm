@@ -12,7 +12,12 @@ export interface Client {
 }
 
 export type Side = 'buyer' | 'seller'
-
+export type TransactionStatus = 'active' | 'closed'
+// Same 8 names as the check constraint in migration 007.
+export const CALENDAR_COLORS = [
+  'blue', 'teal', 'green', 'purple', 'pink', 'orange', 'brown', 'gray',
+] as const
+export type CalendarColor = (typeof CALENDAR_COLORS)[number]
 export type Fuel = 'included' | 'gas' | 'electric' // 'included' = type not picked
 export type Ownership = 'included' | 'owned' | 'rented'
 
@@ -32,6 +37,8 @@ export interface Transaction {
   side: Side
   acceptance_date: string | null
   created_at: string
+  status: TransactionStatus
+  color: CalendarColor | null // null = no color picked
 
   // Property
   property_address: string // street address
