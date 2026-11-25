@@ -79,14 +79,13 @@ export function NewTransactionPage() {
   // Fields that apply to this side AND whose "show if" condition is met
   const visibleFields: FieldDef[] = side
     ? FIELDS.filter(
-      (f) =>
-        f.sides.includes(side) && (!f.showIf || values[f.showIf.key] === f.showIf.equals),
-    )
+        (f) => f.sides.includes(side) && (!f.showIf || values[f.showIf.key] === f.showIf.equals),
+      )
     : []
 
   // Group by section, keeping the order they appear in the list
   const sections = visibleFields.reduce<Record<string, FieldDef[]>>((acc, f) => {
-    ; (acc[f.section] ??= []).push(f)
+    ;(acc[f.section] ??= []).push(f)
     return acc
   }, {})
 
@@ -151,10 +150,10 @@ export function NewTransactionPage() {
       new_client:
         clientMode === 'new'
           ? {
-            full_name: newClient.full_name.trim(),
-            email: newClient.email.trim(),
-            phone: newClient.phone.trim(),
-          }
+              full_name: newClient.full_name.trim(),
+              email: newClient.email.trim(),
+              phone: newClient.phone.trim(),
+            }
           : null,
       transaction,
       key_dates: keyDates,

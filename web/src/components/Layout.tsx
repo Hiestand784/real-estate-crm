@@ -6,7 +6,9 @@ export function Layout() {
     <div>
       <header>
         <nav>
-          <NavLink to="/" end>Dashboard</NavLink>{' '}
+          <NavLink to="/" end>
+            Dashboard
+          </NavLink>{' '}
           <NavLink to="/transactions/new">New transaction</NavLink>
         </nav>
         <button onClick={() => supabase.auth.signOut()}>Sign out</button>

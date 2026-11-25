@@ -160,7 +160,13 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
 
     case 'date':
       control = (
-        <input id={id} name={field.key} type="date" value={value} onChange={(e) => set(e.target.value)} />
+        <input
+          id={id}
+          name={field.key}
+          type="date"
+          value={value}
+          onChange={(e) => set(e.target.value)}
+        />
       )
       break
 
@@ -169,7 +175,13 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
       const tKey = timeKey(field.key)
       control = (
         <>
-          <input id={id} name={field.key} type="date" value={value} onChange={(e) => set(e.target.value)} />{' '}
+          <input
+            id={id}
+            name={field.key}
+            type="date"
+            value={value}
+            onChange={(e) => set(e.target.value)}
+          />{' '}
           <input
             name={tKey}
             type="time"

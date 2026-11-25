@@ -15,18 +15,21 @@ export type Side = 'buyer' | 'seller'
 export type TransactionStatus = 'active' | 'closed'
 // Same 8 names as the check constraint in migration 007.
 export const CALENDAR_COLORS = [
-  'blue', 'teal', 'green', 'purple', 'pink', 'orange', 'brown', 'gray',
+  'blue',
+  'teal',
+  'green',
+  'purple',
+  'pink',
+  'orange',
+  'brown',
+  'gray',
 ] as const
 export type CalendarColor = (typeof CALENDAR_COLORS)[number]
 export type Fuel = 'included' | 'gas' | 'electric' // 'included' = type not picked
 export type Ownership = 'included' | 'owned' | 'rented'
 
 export type PaymentMethod =
-  | 'cash'
-  | 'new_mortgage'
-  | 'assumption'
-  | 'conditional_sales_contract'
-  | 'other'
+  'cash' | 'new_mortgage' | 'assumption' | 'conditional_sales_contract' | 'other'
 
 export type LoanType = 'conventional' | 'insured_conventional' | 'fha' | 'va' | 'usda'
 
