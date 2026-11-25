@@ -62,3 +62,23 @@ export function warningLevel(
     if (days <= rule.yellow) return 'yellow'
     return null
 }
+
+// '2026-11-20' -> 'Fri, Nov 20'. Building the Date from numbers uses local
+// time, which is safe; only parsing a date STRING is the UTC trap.
+export function formatDate(date: string): string {
+    const [y, m, d] = date.split('-').map(Number)
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+    })
+}
+
+// 0 -> 'Today', 1 -> 'Tomorrow', 5 -> 'In 5 days', -2 -> '2 days overdue'
+export function relativeDays(days: number): string {
+    if (days === 0) return 'Today'
+    if (days === 1) return 'Tomorrow'
+    if (days === -1) return '1 day overdue'
+    if (days < 0) return `${-days} days overdue`
+    return `In ${days} days`
+}
