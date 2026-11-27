@@ -19,12 +19,12 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 
 | Field | Tag | Slice |
 |---|---|---|
-| Other agent: name, license #, company, email | Both | A2 |
+| Other agent: name, license #, company, email (heading reads "Seller's agent" on buyer deals, "Buyer's agent" on seller deals) | Both | A2 |
 | Other side of the deal (seller when her client buys, buyer when her client sells): name, phone, email | Both | A2 |
 | Lender info: name, email, phone | Buyer | A2 |
 | Title company (name) | Both | A2 |
 | Title company chosen by: buyer / seller | Both | A2 |
-| Earnest money held by: myself / the other agent / title company | Both | A2 |
+| Earnest money held by: listing broker / selling broker / title company | Both | A2 |
 
 ## 3. Property
 
@@ -37,7 +37,7 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 | Year built | Seller | A |
 | Total square feet | Seller | A |
 | Annual tax | Seller | A |
-| Lockbox type (Century lock or combination) | Seller | A |
+| Lockbox type (SentriLock or combination) | Seller | A |
 | HOA yes/no | Seller | A |
 
 ## 4. Transaction information
@@ -47,14 +47,14 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 | List price | Both | A |
 | Sale price | Both | A |
 | Seller concessions (percentage or amount) | Both | A |
-| Commission rate: seller and buyer | Both | A |
-| Commission amounts (calculated: rate × sale price, display only) | Both | A |
+| Listing broker commission (%) | Seller | A |
+| Buying broker commission (%) | Both | A |
+| Commission amounts (calculated: rate × sale price, display only; listing broker amount on seller side only) | Both | A |
 | Party responsible for paying commission | Both | A |
 | Earnest money amount | Both | A |
 | Payment method: cash / new mortgage (conventional, insured conventional, FHA, VA, USDA) / assumption / conditional sales contract / other | Buyer | A |
 | Home warranty yes/no | Both | A |
 | Who pays warranty (shown only if warranty is yes) | Both | A |
-| Home insurance yes/no | Buyer | A |
 | Selling home as-is yes/no | Seller | A |
 | Possession: pre / at / post | Both | A |
 | Survey waived yes/no | Both | A |
@@ -67,10 +67,8 @@ Shown between Property and Pricing. Stored as columns on the transaction for now
 | Field | Tag | Slice |
 |---|---|---|
 | Earnest money due, initial inspection due, closing date | Both | First form (done) |
-| Buyer's exclusive agency agreement: end date | Buyer | First form (done) |
 | Listing contract: expires (very important: going past means redoing everything) | Seller | First form (done) |
 | Date of contract creation | Both | B |
-| Buyer's exclusive agency agreement: start date | Buyer | B |
 | Listing contract: created | Seller | B |
 | Listing date | Seller | B |
 | Pending date | Both | B |
@@ -84,13 +82,12 @@ Each item is a checkbox: checked = true, unchecked = empty (null).
 
 | Field | Tag | Slice |
 |---|---|---|
-| Buyer's exclusive agency agreement on file | Buyer | D |
-| Listing contract on file | Seller | D |
-| Seller's disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
-| Lead-based paint disclosure: signed, signed copy on file (two checkboxes) | Seller | D |
-| Disclosure of interests on file | Seller | D |
-| HOA bylaws on hand (moved here from Property; shown only if HOA is yes) | Seller | D |
-| Purchase agreement on file | Both | D |
+| Buyer's exclusive agency agreement: start and end dates (key dates shown in this section; still get dashboard warnings) | Buyer | B |
+| Home insurance (checkbox, moved here from Contract terms) | Buyer | D |
+| Seller's disclosure | Seller | D |
+| Lead-based paint disclosure (only needed for homes built before 1978) | Seller | D |
+| Disclosure of interests | Seller | D |
+| HOA bylaws (shown only if HOA is yes) | Seller | D |
 
 ## 7. Notes
 
@@ -117,6 +114,6 @@ Each item is a checkbox: checked = true, unchecked = empty (null).
 - "Date of contract creation" means the purchase agreement's creation date.
 - HOA due date only shows when HOA is yes.
 - Offer expiration time is optional and stored as local (Indiana) clock time with no time zone.
-  - Document tracker items are "on file" checkboxes only. Add a "signed" box to the purchase agreement later if she wants one.
-  - HOA bylaws on hand lives in the Document tracker (not Property) and is a checkbox there.
+  - Document tracker items are one checkbox per document (checked = taken care of). Listing contract and purchase agreement aren't tracked: entering their dates shows she has them. (Changed after client feedback, Nov 27, migration 008.)
+  - HOA bylaws lives in the Document tracker (not Property) and is a checkbox there.
   - Lead-based paint disclosure shows on every seller deal, labeled "homes built before 1978". She leaves it blank when it doesn't apply.

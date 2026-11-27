@@ -136,6 +136,8 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
           step="0.01"
           min="0"
           inputMode="decimal"
+          className="no-spin"
+          onWheel={(e) => e.currentTarget.blur()}
           value={value}
           onChange={(e) => set(e.target.value)}
         />
@@ -152,6 +154,8 @@ export function FieldInput({ field, values, onChange }: FieldInputProps) {
           min="0"
           max="100"
           inputMode="decimal"
+          className="no-spin"
+          onWheel={(e) => e.currentTarget.blur()}
           value={value}
           onChange={(e) => set(e.target.value)}
         />

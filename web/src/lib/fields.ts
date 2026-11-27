@@ -84,8 +84,8 @@ const CHOSEN_BY_OPTIONS: Option[] = [
 
 const EM_HOLDER_OPTIONS: Option[] = [
   BLANK,
-  { value: 'self', label: 'Myself' },
-  { value: 'other_agent', label: 'The other agent' },
+  { value: 'listing_broker', label: 'Listing broker' },
+  { value: 'selling_broker', label: 'Selling broker' },
   { value: 'title_company', label: 'Title company' },
 ]
 
@@ -100,7 +100,7 @@ const PAYER_OPTIONS: Option[] = [
 
 const LOCKBOX_OPTIONS: Option[] = [
   BLANK,
-  { value: 'century_lock', label: 'Century lock' },
+  { value: 'sentrilock', label: 'Sentri lock' },
   { value: 'combination_lock', label: 'Combination lock' },
 ]
 
@@ -204,11 +204,13 @@ export const FIELDS: FieldDef[] = [
   col('has_hoa', 'HOA', 'yesno', PROPERTY, SELLER),
 
   // ---- Other party information ----------------------------------------------------
-  heading('other_agent_heading', 'Other agent', OTHER, BOTH),
+  heading('other_agent_heading_seller', "Seller's agent", OTHER, BUYER),
+  heading('other_agent_heading_buyer', "Buyer's agent", OTHER, SELLER),
   col('other_agent_name', 'Name', 'text', OTHER, BOTH),
   col('other_agent_license', 'License #', 'text', OTHER, BOTH),
   col('other_agent_company', 'Company', 'text', OTHER, BOTH),
   col('other_agent_email', 'Email', 'email', OTHER, BOTH),
+
   // The other side of the deal: the seller when her client buys, and the reverse
   heading('other_party_heading_seller', 'Seller', OTHER, BUYER),
   heading('other_party_heading_buyer', 'Buyer', OTHER, SELLER),
@@ -235,22 +237,22 @@ export const FIELDS: FieldDef[] = [
     options: CONCESSION_TYPE_OPTIONS,
   }),
   col('seller_concessions_value', 'Seller concessions: value', 'money', PRICING, BOTH, {
-    help: 'A percentage or a dollar amount, matching the type above.',
+    help: 'Percentage or dollar amount, match the type above.',
   }),
-  col('seller_commission_rate', 'Seller commission rate (%)', 'percent', PRICING, BOTH),
-  col('buyer_commission_rate', 'Buyer commission rate (%)', 'percent', PRICING, BOTH),
+  col('seller_commission_rate', 'Listing broker commission (%)', 'percent', PRICING, SELLER),
+  col('buyer_commission_rate', 'Buying broker commission (%)', 'percent', PRICING, BOTH),
   {
     key: 'seller_commission_amount',
-    label: 'Seller commission amount',
+    label: 'Listing broker commission amount',
     type: 'computed',
     section: PRICING,
-    sides: BOTH,
+    sides: SELLER,
     store: 'none',
     compute: (v) => commissionAmount(v.sale_price, v.seller_commission_rate),
   },
   {
     key: 'buyer_commission_amount',
-    label: 'Buyer commission amount',
+    label: 'Buying broker commission amount',
     type: 'computed',
     section: PRICING,
     sides: BOTH,
@@ -275,7 +277,6 @@ export const FIELDS: FieldDef[] = [
     options: PAYER_OPTIONS,
     showIf: { key: 'home_warranty', equals: 'true' },
   }),
-  col('home_insurance_in', 'Home insurance in', 'yesno', TERMS, BUYER),
   col('sold_as_is', 'Selling home as-is', 'yesno', TERMS, SELLER),
   col('possession', 'Possession', 'select', TERMS, BOTH, { options: POSSESSION_OPTIONS }),
   col('survey_waived', 'Survey waived', 'yesno', TERMS, BOTH),
@@ -298,8 +299,6 @@ export const FIELDS: FieldDef[] = [
     options: COLOR_OPTIONS,
     help: 'Shown as a dot next to this deal’s dates so you can tell deals apart.',
   }),
-  keyDate('buyer_agency_start', 'Buyer agency agreement starts', BUYER),
-  keyDate('buyer_agency_end', 'Buyer agency agreement ends', BUYER),
   keyDate('listing_contract_start', 'Listing contract created', SELLER),
   keyDate('list_date', 'Listing date', SELLER),
   keyDate('listing_contract_expires', 'Listing contract expires', SELLER, {
@@ -316,39 +315,20 @@ export const FIELDS: FieldDef[] = [
   keyDate('hoa_due', 'HOA bylaws due', SELLER, { showIf: { key: 'has_hoa', equals: 'true' } }),
   keyDate('closing', 'Closing date', BOTH),
   // ---- Document tracker (status only; file storage comes later) --------------------
-  col(
-    'doc_buyer_agency_on_file',
-    "Buyer's exclusive agency agreement on file",
-    'checkbox',
-    DOCS,
-    BUYER,
-  ),
-  col('doc_listing_contract_on_file', 'Listing contract on file', 'checkbox', DOCS, SELLER),
-  heading('sellers_disclosure_heading', "Seller's disclosure", DOCS, SELLER),
-  col('doc_sellers_disclosure_signed', 'Signed', 'checkbox', DOCS, SELLER),
-  col('doc_sellers_disclosure_on_file', 'Signed copy on file', 'checkbox', DOCS, SELLER),
-  // Only required for homes built before 1978. She can skip it otherwise.
-  heading(
-    'lead_paint_heading',
-    'Lead-based paint disclosure (homes built before 1978)',
-    DOCS,
-    SELLER,
-  ),
-  col('doc_lead_paint_signed', 'Signed', 'checkbox', DOCS, SELLER),
-  col('doc_lead_paint_on_file', 'Signed copy on file', 'checkbox', DOCS, SELLER),
-  heading('other_docs_heading', 'Other documents', DOCS, SELLER),
-  col(
-    'doc_disclosure_of_interests_on_file',
-    'Disclosure of interests on file',
-    'checkbox',
-    DOCS,
-    SELLER,
-  ),
-  // Moved here from Property. Same column, so no database change.
-  col('hoa_bylaws_on_hand', 'HOA bylaws on hand', 'checkbox', DOCS, SELLER, {
+  // Buyer agency dates live here as longer-term terms. They're still key dates
+  // (saved to key_dates, warned about on the dashboard); only the section differs.
+  keyDate('buyer_agency_start', 'Buyer agency agreement starts', BUYER, { section: DOCS }),
+  keyDate('buyer_agency_end', 'Buyer agency agreement ends', BUYER, { section: DOCS }),
+  col('home_insurance_in', 'Home insurance', 'checkbox', DOCS, BUYER),
+  // Seller side: one checkbox per document, checked = taken care of
+  col('doc_sellers_disclosure_on_file', "Seller's disclosure", 'checkbox', DOCS, SELLER),
+  col('doc_lead_paint_on_file', 'Lead-based paint disclosure', 'checkbox', DOCS, SELLER, {
+    help: 'Only needed for homes built before 1978.',
+  }),
+  col('doc_disclosure_of_interests_on_file', 'Disclosure of interests', 'checkbox', DOCS, SELLER),
+  col('hoa_bylaws_on_hand', 'HOA bylaws', 'checkbox', DOCS, SELLER, {
     showIf: { key: 'has_hoa', equals: 'true' },
   }),
-  col('doc_purchase_agreement_on_file', 'Purchase agreement on file', 'checkbox', DOCS, BOTH),
 
   // ---- Notes -----------------------------------------------------------------------
   col('general_notes', 'Notes', 'textarea', NOTES, BOTH, { hideLabel: true }),

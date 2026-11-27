@@ -53,3 +53,14 @@ body {
   white-space: nowrap;
   border: 0;
 }
+
+/* Number boxes without the up/down arrows */
+.no-spin::-webkit-outer-spin-button,
+.no-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spin {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
