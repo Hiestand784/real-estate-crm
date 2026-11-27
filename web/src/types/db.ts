@@ -55,7 +55,7 @@ export interface Transaction {
   year_built: number | null
   square_feet: number | null
   annual_tax: number | null
-  lockbox_type: 'century_lock' | 'combination_lock' | null
+  lockbox_type: 'sentrilock' | 'combination_lock' | null
   has_hoa: boolean | null // null = not answered yet
   hoa_bylaws_on_hand: boolean | null
 
@@ -72,14 +72,14 @@ export interface Transaction {
   lender_phone: string | null
   title_company: string | null
   title_company_chosen_by: Side | null
-  earnest_money_holder: 'self' | 'other_agent' | 'title_company' | null
+  earnest_money_holder: 'listing_broker' | 'selling_broker' | 'title_company' | null
 
   // Pricing and commission
   list_price: number | null
   sale_price: number | null
   seller_concessions_type: 'percent' | 'amount' | null
   seller_concessions_value: number | null
-  seller_commission_rate: number | null
+  seller_commission_rate: number | null // seller side only
   buyer_commission_rate: number | null
   commission_payer: string | null
   earnest_money_amount: number | null
@@ -89,7 +89,6 @@ export interface Transaction {
   loan_type: LoanType | null
   home_warranty: boolean | null
   home_warranty_payer: string | null
-  home_insurance_in: boolean | null
   sold_as_is: boolean | null
   possession: 'pre' | 'at' | 'post' | null
   survey_waived: boolean | null

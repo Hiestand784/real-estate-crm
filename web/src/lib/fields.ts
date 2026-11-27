@@ -100,7 +100,7 @@ const PAYER_OPTIONS: Option[] = [
 
 const LOCKBOX_OPTIONS: Option[] = [
   BLANK,
-  { value: 'sentrilock', label: 'Sentri lock' },
+  { value: 'sentrilock', label: 'SentriLock' },
   { value: 'combination_lock', label: 'Combination lock' },
 ]
 
