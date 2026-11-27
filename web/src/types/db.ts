@@ -93,6 +93,7 @@ export interface Transaction {
   possession: 'pre' | 'at' | 'post' | null
   survey_waived: boolean | null
   referral: boolean | null
+
   // Items included: null = box not checked
   incl_refrigerator: true | null
   incl_dishwasher: true | null
@@ -105,10 +106,12 @@ export interface Transaction {
   items_excluded: string | null
 
   // Document tracker: null = box not checked
-  home_insurance: true | null // buyer side only
+  home_insurance_in: true | null // buyer side only
   doc_sellers_disclosure_on_file: true | null // seller side only, like the two below
   doc_lead_paint_on_file: true | null
   doc_disclosure_of_interests_on_file: true | null
+
+  general_notes: string | null
 }
 
 export type KeyDateKind =
